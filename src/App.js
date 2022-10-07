@@ -7,7 +7,7 @@ export default function App() {
     <div className="App">
       <header className="App-header">
         <img src={ logo } className="App-logo" alt="logo" />
-        <p>SUA VEZ - Branch do pull request</p>
+        <p>SUA VEZ - TESTE DA BRANCH</p>
       </header>
     </div>
   );
