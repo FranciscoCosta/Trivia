@@ -30,6 +30,11 @@ class Login extends Component {
     }
   };
 
+  handleSettings = () => {
+    const { history } = this.props;
+    history.push('/settings');
+  };
+
   handleClick = async () => {
     const { history } = this.props;
     const endpoint = 'https://opentdb.com/api_token.php?command=request';
@@ -84,6 +89,14 @@ class Login extends Component {
               </button>
             </div>
           </form>
+          <button
+            className="Login__button-settings"
+            onClick={ this.handleSettings }
+            type="button"
+            data-testid="btn-settings"
+          >
+            Settings
+          </button>
         </div>
       </div>
     );
