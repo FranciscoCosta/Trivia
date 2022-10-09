@@ -42,7 +42,7 @@ class Login extends Component {
     const apiResponse = await response.json();
     const apiValues = Object.values(apiResponse);
     localStorage.setItem('token', apiValues[2]);
-    history.push('/questions');
+    history.push('/game');
   };
 
   render() {

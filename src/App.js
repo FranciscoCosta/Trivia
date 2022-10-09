@@ -3,14 +3,14 @@ import { Route, Switch } from 'react-router-dom';
 // import logo from './trivia.png';
 import './App.css';
 import Login from './Pages/Login';
-import Questions from './Pages/Questions';
+import Game from './Pages/Game';
 import Settings from './Pages/Settings';
 // Grupo 5
 export default function App() {
   return (
     <Switch>
       <Route exact path="/" component={ Login } />
-      <Route exact path="/questions" component={ Questions } />
+      <Route exact path="/game" component={ Game } />
       <Route exact path="/settings" component={ Settings } />
     </Switch>
     // <div className="App">
