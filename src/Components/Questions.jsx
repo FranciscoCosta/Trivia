@@ -7,6 +7,7 @@ class Questions extends Component {
     results: [],
     counter: 0,
     loading: true,
+    waitAnswer: true,
   };
 
   async componentDidMount() {
@@ -49,8 +50,14 @@ class Questions extends Component {
     console.log('aqui');
   };
 
+  handleClick = () => {
+    this.setState({
+      waitAnswer: false,
+    });
+  };
+
   render() {
-    const { results, counter, loading } = this.state;
+    const { results, counter, loading, waitAnswer } = this.state;
     if (loading) {
       return <p>Carregando ...</p>;
     }
@@ -67,11 +74,24 @@ class Questions extends Component {
         <h2 data-testid="question-text">{results[counter].question}</h2>
         <div data-testid="answer-options">
           {answersRandom.map((answer) => (answer === correct ? (
-            <button type="button" data-testid="correct-answer" key={ answer }>
+            <button
+              type="button"
+              data-testid="correct-answer"
+              key={ answer }
+              onClick={ this.handleClick }
+              style={ {
+                border: waitAnswer ? '1px solid black' : '3px solid rgb(6, 240, 15)' } }
+            >
               {answer}
             </button>
           ) : (
-            <button type="button" data-testid="wrong-answer" key={ answer }>
+            <button
+              type="button"
+              data-testid="wrong-answer"
+              key={ answer }
+              onClick={ this.handleClick }
+              style={ { border: waitAnswer ? '1px solid black' : '3px solid red' } }
+            >
               {answer}
             </button>
           )))}
