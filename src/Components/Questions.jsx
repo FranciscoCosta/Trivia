@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { getScore } from '../Redux/Action/index';
 
 class Questions extends Component {
   state = {
@@ -10,24 +11,28 @@ class Questions extends Component {
     waitAnswer: true,
     timer: 30,
     isDisable: false,
-    answersRandom: '',
+    answersRandom: [],
     correct: '',
   };
 
   async componentDidMount() {
+    const { dispatch } = this.props;
     await this.fetchQuestions();
     const TIMER = 1000;
-    setInterval(() => {
+    const timerConter = setInterval(() => {
       const { timer } = this.state;
       if (timer === 0) {
         this.setState({
           isDisable: true,
         });
-        return;
+        const add = 0;
+        dispatch(getScore(add));
+        clearInterval(timerConter);
+      } else {
+        this.setState({
+          timer: timer - 1,
+        });
       }
-      this.setState({
-        timer: timer - 1,
-      });
     }, TIMER);
   }
 
@@ -39,6 +44,7 @@ class Questions extends Component {
     const endPoint = `https://opentdb.com/api.php?amount=5&token=${token}`;
     const response = await fetch(endPoint);
     const apiResponse = await response.json();
+    console.log(apiResponse);
     const { response_code: responseValidation, results } = apiResponse;
     if (responseValidation === ERROR_API) {
       window.localStorage.removeItem('token');
@@ -78,15 +84,59 @@ class Questions extends Component {
     console.log('aqui');
   };
 
-  handleClick = () => {
+  handleClick = (event) => {
+    const { dispatch } = this.props;
+    const POINTS = 10;
+    const { timer, results, counter } = this.state;
+    const diff = results[counter].difficulty;
+    if (event.target.value === 'truth') {
+      if (diff === 'easy') {
+        const multiply = 1;
+        const score = POINTS + timer * multiply;
+        dispatch(getScore(score));
+      } else if (diff === 'medium') {
+        const multiply = 2;
+        const score = POINTS + timer * multiply;
+        dispatch(getScore(score));
+      } else {
+        const multiply = 3;
+        const score = POINTS + timer * multiply;
+        dispatch(getScore(score));
+      }
+    } else {
+      const score = 0;
+      dispatch(getScore(score));
+    }
     this.setState({
       waitAnswer: false,
     });
   };
 
+  nextQuestion = () => {
+    const FINAL_QUESTION = 4;
+    const { counter } = this.state;
+    const { history } = this.props;
+    if (counter === FINAL_QUESTION) {
+      history.push('/feedback');
+    }
+    this.setState({
+      counter: counter + 1,
+      timer: 30,
+      waitAnswer: true,
+    });
+  };
+
   render() {
-    const { results, counter, loading, waitAnswer, timer, isDisable,
-      answersRandom, correct } = this.state;
+    const {
+      results,
+      counter,
+      loading,
+      waitAnswer,
+      timer,
+      isDisable,
+      answersRandom,
+      correct,
+    } = this.state;
     if (loading) {
       return <p>Carregando ...</p>;
     }
@@ -105,8 +155,12 @@ class Questions extends Component {
               key={ answer }
               onClick={ this.handleClick }
               disabled={ isDisable }
+              value="truth"
               style={ {
-                border: waitAnswer ? '1px solid black' : '3px solid rgb(6, 240, 15)' } }
+                border: waitAnswer
+                  ? '1px solid black'
+                  : '3px solid rgb(6, 240, 15)',
+              } }
             >
               {answer}
             </button>
@@ -117,12 +171,25 @@ class Questions extends Component {
               key={ answer }
               onClick={ this.handleClick }
               disabled={ isDisable }
-              style={ { border: waitAnswer ? '1px solid black' : '3px solid red' } }
+              style={ {
+                border: waitAnswer ? '1px solid black' : '3px solid red',
+              } }
             >
               {answer}
             </button>
           )))}
         </div>
+        {!waitAnswer ? (
+          <button
+            type="button"
+            data-testid="btn-next"
+            onClick={ this.nextQuestion }
+          >
+            NEXT
+          </button>
+        ) : (
+          <p />
+        )}
       </>
     );
   }
@@ -134,4 +201,15 @@ Questions.propTypes = {
   }).isRequired,
 };
 
-export default connect()(Questions);
+const mapStateToProps = (score) => ({
+  score,
+});
+
+Questions.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+};
+
+export default connect(mapStateToProps)(Questions);
