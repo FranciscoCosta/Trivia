@@ -40,11 +40,11 @@ class Login extends Component {
   dispatchAction = () => {
     const { dispatch } = this.props;
     const { name, email } = this.state;
-    const user = {
+    const player = {
       name,
       email,
     };
-    dispatch(getUser(user));
+    dispatch(getUser(player));
   };
 
   handleClick = async () => {
