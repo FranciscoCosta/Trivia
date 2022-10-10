@@ -10,6 +10,8 @@ class Questions extends Component {
     waitAnswer: true,
     timer: 30,
     isDisable: false,
+    answersRandom: '',
+    correct: '',
   };
 
   async componentDidMount() {
@@ -32,6 +34,7 @@ class Questions extends Component {
   fetchQuestions = async () => {
     const ERROR_API = 3;
     const { history } = this.props;
+    const { counter } = this.state;
     const token = localStorage.getItem('token');
     const endPoint = `https://opentdb.com/api.php?amount=5&token=${token}`;
     const response = await fetch(endPoint);
@@ -43,6 +46,16 @@ class Questions extends Component {
     } else {
       this.setState({ results, loading: false });
       this.handleQuestions();
+      const answers = [
+        results[counter].correct_answer,
+        ...results[counter].incorrect_answers,
+      ];
+      const answersRandom = this.shuffle(answers);
+      const correct = results[counter].correct_answer;
+      this.setState({
+        answersRandom,
+        correct,
+      });
     }
   };
 
@@ -72,16 +85,12 @@ class Questions extends Component {
   };
 
   render() {
-    const { results, counter, loading, waitAnswer, timer, isDisable } = this.state;
+    const { results, counter, loading, waitAnswer, timer, isDisable,
+      answersRandom, correct } = this.state;
     if (loading) {
       return <p>Carregando ...</p>;
     }
-    const answers = [
-      results[counter].correct_answer,
-      ...results[counter].incorrect_answers,
-    ];
-    const answersRandom = this.shuffle(answers);
-    const correct = results[counter].correct_answer;
+
     return (
       <>
         <p>{timer}</p>
