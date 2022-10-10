@@ -5,7 +5,7 @@ import { PropTypes } from 'prop-types';
 
 class Header extends Component {
   render() {
-    const { name, email } = this.props;
+    const { name, email, score } = this.props;
     const endpoint = 'https://www.gravatar.com/avatar/';
     const hash = MD5(email);
     const gravatar = `${endpoint}${hash}`;
@@ -19,7 +19,7 @@ class Header extends Component {
             <p data-testid="header-player-name">{name}</p>
           </div>
           <div className="Header__score">
-            <p data-testid="header-score">0</p>
+            <p data-testid="header-score">{score}</p>
           </div>
         </div>
       </div>
@@ -27,9 +27,10 @@ class Header extends Component {
   }
 }
 
-const mapStateToProps = ({ player: { name, email } }) => ({
+const mapStateToProps = ({ player: { name, email, score } }) => ({
   name,
   email,
+  score,
 });
 
 Header.propTypes = {
