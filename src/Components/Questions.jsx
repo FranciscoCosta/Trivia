@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { getScore } from '../Redux/Action/index';
+import { getScore, getAssertions } from '../Redux/Action/index';
 
 class Questions extends Component {
   state = {
@@ -13,6 +13,7 @@ class Questions extends Component {
     isDisable: false,
     answersRandom: [],
     correct: '',
+    assertions: 0,
   };
 
   async componentDidMount() {
@@ -51,7 +52,6 @@ class Questions extends Component {
       history.push('/');
     } else {
       this.setState({ results, loading: false });
-      this.handleQuestions();
       const answers = [
         results[counter].correct_answer,
         ...results[counter].incorrect_answers,
@@ -80,16 +80,13 @@ class Questions extends Component {
     return array;
   };
 
-  handleQuestions = () => {
-    console.log('aqui');
-  };
-
   handleClick = (event) => {
     const { dispatch } = this.props;
     const POINTS = 10;
-    const { timer, results, counter } = this.state;
+    const { timer, results, counter, assertions } = this.state;
     const diff = results[counter].difficulty;
     if (event.target.value === 'truth') {
+      dispatch(getAssertions(assertions));
       if (diff === 'easy') {
         const multiply = 1;
         const score = POINTS + timer * multiply;
@@ -103,9 +100,6 @@ class Questions extends Component {
         const score = POINTS + timer * multiply;
         dispatch(getScore(score));
       }
-    } else {
-      const score = 0;
-      dispatch(getScore(score));
     }
     this.setState({
       waitAnswer: false,
@@ -114,15 +108,27 @@ class Questions extends Component {
 
   nextQuestion = () => {
     const FINAL_QUESTION = 4;
-    const { counter } = this.state;
+    const { counter, results } = this.state;
     const { history } = this.props;
     if (counter === FINAL_QUESTION) {
       history.push('/feedback');
     }
-    this.setState({
-      counter: counter + 1,
+    this.setState((prevState) => ({
+      counter: prevState.counter + 1,
       timer: 30,
       waitAnswer: true,
+    }), () => {
+      const { counter: counterUpdate } = this.state;
+      const answers = [
+        results[counterUpdate].correct_answer,
+        ...results[counterUpdate].incorrect_answers,
+      ];
+      const answersRandom = this.shuffle(answers);
+      const correct = results[counterUpdate].correct_answer;
+      this.setState({
+        answersRandom,
+        correct,
+      });
     });
   };
 
@@ -201,8 +207,9 @@ Questions.propTypes = {
   }).isRequired,
 };
 
-const mapStateToProps = (score) => ({
+const mapStateToProps = (score, assertions) => ({
   score,
+  assertions,
 });
 
 Questions.propTypes = {
