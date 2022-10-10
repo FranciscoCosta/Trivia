@@ -37,7 +37,9 @@ class Questions extends Component {
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex -= 1;
       [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex], array[currentIndex]];
+        array[randomIndex],
+        array[currentIndex],
+      ];
     }
 
     return array;
@@ -52,32 +54,29 @@ class Questions extends Component {
     if (loading) {
       return <p>Carregando ...</p>;
     }
-    const answers = [results[counter].correct_answer,
-      ...results[counter].incorrect_answers];
+    const answers = [
+      results[counter].correct_answer,
+      ...results[counter].incorrect_answers,
+    ];
     const answersRandom = this.shuffle(answers);
     const correct = results[counter].correct_answer;
     return (
       <>
         <div>Questions</div>
-        <h1 data-testid="question-category">
-          {results[counter].category}
-        </h1>
-        <h2 data-testid="question-text">
-          {results[counter].question}
-        </h2>
+        <h1 data-testid="question-category">{results[counter].category}</h1>
+        <h2 data-testid="question-text">{results[counter].question}</h2>
         <div data-testid="answer-options">
-          {answersRandom.map((answer) => (
-            (answer === correct)
-              ? <button type="button" data-testid="correct-answer" key={ answer }>
-                {answer}
-                </button>
-              : <button type="button" data-testid="wrong-answer" key={ answer }>
-                {answer}
-                </button>
-          ))}
+          {answersRandom.map((answer) => (answer === correct ? (
+            <button type="button" data-testid="correct-answer" key={ answer }>
+              {answer}
+            </button>
+          ) : (
+            <button type="button" data-testid="wrong-answer" key={ answer }>
+              {answer}
+            </button>
+          )))}
         </div>
       </>
-
     );
   }
 }
