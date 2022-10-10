@@ -8,15 +8,33 @@ class Questions extends Component {
     counter: 0,
     loading: true,
     waitAnswer: true,
+    timer: 30,
+    isDisable: false,
+    answersRandom: '',
+    correct: '',
   };
 
   async componentDidMount() {
     await this.fetchQuestions();
+    const TIMER = 1000;
+    setInterval(() => {
+      const { timer } = this.state;
+      if (timer === 0) {
+        this.setState({
+          isDisable: true,
+        });
+        return;
+      }
+      this.setState({
+        timer: timer - 1,
+      });
+    }, TIMER);
   }
 
   fetchQuestions = async () => {
     const ERROR_API = 3;
     const { history } = this.props;
+    const { counter } = this.state;
     const token = localStorage.getItem('token');
     const endPoint = `https://opentdb.com/api.php?amount=5&token=${token}`;
     const response = await fetch(endPoint);
@@ -28,6 +46,16 @@ class Questions extends Component {
     } else {
       this.setState({ results, loading: false });
       this.handleQuestions();
+      const answers = [
+        results[counter].correct_answer,
+        ...results[counter].incorrect_answers,
+      ];
+      const answersRandom = this.shuffle(answers);
+      const correct = results[counter].correct_answer;
+      this.setState({
+        answersRandom,
+        correct,
+      });
     }
   };
 
@@ -57,18 +85,15 @@ class Questions extends Component {
   };
 
   render() {
-    const { results, counter, loading, waitAnswer } = this.state;
+    const { results, counter, loading, waitAnswer, timer, isDisable,
+      answersRandom, correct } = this.state;
     if (loading) {
       return <p>Carregando ...</p>;
     }
-    const answers = [
-      results[counter].correct_answer,
-      ...results[counter].incorrect_answers,
-    ];
-    const answersRandom = this.shuffle(answers);
-    const correct = results[counter].correct_answer;
+
     return (
       <>
+        <p>{timer}</p>
         <div>Questions</div>
         <h1 data-testid="question-category">{results[counter].category}</h1>
         <h2 data-testid="question-text">{results[counter].question}</h2>
@@ -79,6 +104,7 @@ class Questions extends Component {
               data-testid="correct-answer"
               key={ answer }
               onClick={ this.handleClick }
+              disabled={ isDisable }
               style={ {
                 border: waitAnswer ? '1px solid black' : '3px solid rgb(6, 240, 15)' } }
             >
@@ -90,6 +116,7 @@ class Questions extends Component {
               data-testid="wrong-answer"
               key={ answer }
               onClick={ this.handleClick }
+              disabled={ isDisable }
               style={ { border: waitAnswer ? '1px solid black' : '3px solid red' } }
             >
               {answer}
