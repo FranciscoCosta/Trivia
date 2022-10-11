@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getUser } from '../Redux/Action/index';
+import './Login.css';
+import logo from '../trivia.png';
 
 class Login extends Component {
   constructor() {
@@ -65,6 +67,9 @@ class Login extends Component {
       <div className="Login">
         <div className="Login__container">
           <form className="Login__container-form">
+            <div className="Login__logo">
+              <img src={ logo } className="App-logo" alt="logo" />
+            </div>
             <div className="Login__form-field">
               <input
                 type="text"
@@ -102,14 +107,16 @@ class Login extends Component {
               </button>
             </div>
           </form>
-          <button
-            className="Login__button-settings"
-            onClick={ this.handleSettings }
-            type="button"
-            data-testid="btn-settings"
-          >
-            Settings
-          </button>
+          <div className="Login__settings">
+            <button
+              className="Login__button-settings"
+              onClick={ this.handleSettings }
+              type="button"
+              data-testid="btn-settings"
+            >
+              Settings
+            </button>
+          </div>
         </div>
       </div>
     );

@@ -14,7 +14,7 @@ function player(state = INITIAL_STATE, action) {
   case GET_SCORE:
     return { ...state, score: Number(action.score) + Number(state.score) };
   case GET_ASSERTIONS:
-    return { ...state, assertions: state.assertions + 1 };
+    return { ...state, assertions: Number(state.assertions + 1) };
   default:
     return state;
   }
