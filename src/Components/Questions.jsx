@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import { getScore, getAssertions } from '../Redux/Action/index';
+import './Questions.css';
+import Loading from './Loading';
 
 class Questions extends Component {
   state = {
@@ -17,32 +20,47 @@ class Questions extends Component {
   };
 
   async componentDidMount() {
-    const { dispatch } = this.props;
     await this.fetchQuestions();
+    this.timerCount();
+  }
+
+  timerCount = () => {
+    const { dispatch } = this.props;
+    console.log('timer');
     const TIMER = 1000;
-    const timerConter = setInterval(() => {
-      const { timer } = this.state;
+    this.interval = setInterval(() => {
+      const { timer, waitAnswer } = this.state;
       if (timer === 0) {
         this.setState({
           isDisable: true,
+          waitAnswer: false,
         });
         const add = 0;
         dispatch(getScore(add));
-        clearInterval(timerConter);
-      } else {
+        clearInterval(this.interval);
+        return;
+      } if (!waitAnswer) {
         this.setState({
-          timer: timer - 1,
+          timer,
         });
+        clearInterval(this.interval);
       }
+      console.log(timer);
+      this.setState({
+        timer: timer - 1,
+      });
     }, TIMER);
-  }
+    return;
+  };
 
   fetchQuestions = async () => {
     const ERROR_API = 3;
-    const { history } = this.props;
+    const { history, settings } = this.props;
+    const { difficulty, numberQuestions } = settings;
+    console.log(settings);
     const { counter } = this.state;
     const token = localStorage.getItem('token');
-    const endPoint = `https://opentdb.com/api.php?amount=5&token=${token}`;
+    const endPoint = `https://opentdb.com/api.php?amount=${numberQuestions}&difficulty=${difficulty}&token=${token}`;
     const response = await fetch(endPoint);
     const apiResponse = await response.json();
     console.log(apiResponse);
@@ -107,16 +125,19 @@ class Questions extends Component {
   };
 
   nextQuestion = () => {
-    const FINAL_QUESTION = 4;
+    this.timerCount();
+    console.log('NEXT');
+    const { history, settings: { numberQuestions } } = this.props;
     const { counter, results } = this.state;
-    const { history } = this.props;
+    const FINAL_QUESTION = numberQuestions - 1;
     if (counter === FINAL_QUESTION) {
       history.push('/feedback');
     }
     this.setState((prevState) => ({
       counter: prevState.counter + 1,
-      timer: 30,
       waitAnswer: true,
+      timer: 30,
+      isDisable: false,
     }), () => {
       const { counter: counterUpdate } = this.state;
       const answers = [
@@ -133,86 +154,109 @@ class Questions extends Component {
   };
 
   render() {
-    const {
-      results,
-      counter,
-      loading,
-      waitAnswer,
-      timer,
-      isDisable,
-      answersRandom,
+    const { results, counter, loading, waitAnswer, timer, isDisable, answersRandom,
       correct,
     } = this.state;
-    if (loading) {
-      return <p>Carregando ...</p>;
-    }
-
+    if (loading) return <Loading />;
     return (
-      <>
-        <p>{timer}</p>
-        <div>Questions</div>
-        <h1 data-testid="question-category">{results[counter].category}</h1>
-        <h2 data-testid="question-text">{results[counter].question}</h2>
-        <div data-testid="answer-options">
-          {answersRandom.map((answer) => (answer === correct ? (
-            <button
-              type="button"
-              data-testid="correct-answer"
-              key={ answer }
-              onClick={ this.handleClick }
-              disabled={ isDisable }
-              value="truth"
-              style={ {
-                border: waitAnswer
-                  ? '1px solid black'
-                  : '3px solid rgb(6, 240, 15)',
-              } }
+      <div className="Questions">
+        <motion.div
+          animate={ { opacity: 1, scale: 1 } }
+          initial={ { opacity: 0, scale: 0 } }
+          transition={ { type: 'spring', duration: 1 } }
+          className="Questions__container"
+        >
+          <div className="Questions__category">
+            <h2
+              data-testid="question-category"
             >
-              {answer}
-            </button>
-          ) : (
-            <button
-              type="button"
-              data-testid="wrong-answer"
-              key={ answer }
-              onClick={ this.handleClick }
-              disabled={ isDisable }
-              style={ {
-                border: waitAnswer ? '1px solid black' : '3px solid red',
-              } }
+              {results[counter].category}
+            </h2>
+          </div>
+          <div className="Question__timer">
+            <p>{timer}</p>
+            <progress className="progress" value={ timer } max="30" />
+          </div>
+          <div className="Questions__question">
+            <h1
+              data-testid="question-text"
             >
-              {answer}
-            </button>
-          )))}
-        </div>
-        {!waitAnswer ? (
-          <button
-            type="button"
-            data-testid="btn-next"
-            onClick={ this.nextQuestion }
+              {results[counter].question}
+            </h1>
+          </div>
+          <div
+            data-testid="answer-options"
+            className="Questions__answer-options"
           >
-            NEXT
-          </button>
-        ) : (
-          <p />
-        )}
-      </>
+            {answersRandom.map((answer) => (answer === correct ? (
+              <button
+                className="Questions__answers"
+                type="button"
+                data-testid="correct-answer"
+                key={ answer }
+                onClick={ this.handleClick }
+                disabled={ isDisable }
+                value="truth"
+                style={ {
+                  border: waitAnswer
+                    ? '1px solid black'
+                    : '3px solid rgb(6, 240, 15)',
+                  background: waitAnswer
+                    ? 'white'
+                    : '#7fff7f',
+                } }
+              >
+                {answer}
+              </button>
+            ) : (
+              <button
+                className="Questions__answers"
+                type="button"
+                data-testid="wrong-answer"
+                key={ answer }
+                onClick={ this.handleClick }
+                disabled={ isDisable }
+                style={ {
+                  border: waitAnswer ? '1px solid black' : '3px solid red',
+                  background: waitAnswer
+                    ? 'white'
+                    : 'crimson',
+                } }
+              >
+                {answer}
+              </button>
+            )))}
+          </div>
+          {!waitAnswer && (
+            <button
+              type="button"
+              data-testid="btn-next"
+              className="Questions__btn-next"
+              onClick={ this.nextQuestion }
+            >
+              NEXT
+            </button>
+          )}
+        </motion.div>
+      </div>
     );
   }
 }
-
 Questions.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
 };
-
-const mapStateToProps = (score, assertions) => ({
-  score,
+const mapStateToProps = ({ player: { assertions, score, settings } }) => ({
+  settings,
   assertions,
+  score,
 });
-
 Questions.propTypes = {
+  settings: PropTypes.shape({
+    difficulty: PropTypes.string,
+    numberQuestions: PropTypes.number,
+  }).isRequired,
   dispatch: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,

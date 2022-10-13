@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { IoSettings } from '@react-icons/all-files/io5/IoSettings';
+import { motion } from 'framer-motion';
 import { getUser } from '../Redux/Action/index';
 import './Login.css';
 import logo from '../trivia.png';
-
+// IoSettings
 class Login extends Component {
   constructor() {
     super();
@@ -13,6 +15,7 @@ class Login extends Component {
       email: '',
       btnDisable: true,
       name: '',
+      rotate: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -61,11 +64,17 @@ class Login extends Component {
   };
 
   render() {
-    const { name, email, btnDisable } = this.state;
+    const { name, email, btnDisable, rotate } = this.state;
+    const ROTATION = 960;
     return (
 
       <div className="Login">
-        <div className="Login__container">
+        <motion.div
+          animate={ { y: 0, scale: 1 } }
+          initial={ { y: -1200, scale: 0 } }
+          transition={ { type: 'spring', duration: 1 } }
+          className="Login__container"
+        >
           <form className="Login__container-form">
             <div className="Login__logo">
               <img src={ logo } className="App-logo" alt="logo" />
@@ -107,17 +116,23 @@ class Login extends Component {
               </button>
             </div>
           </form>
-          <div className="Login__settings">
-            <button
+          <motion.div
+            animate={ { rotate: rotate ? ROTATION : 0 } }
+            transition={ { duration: 4 } }
+            onHoverStart={ () => this.setState({
+              rotate: !rotate,
+            }) }
+            className="Login__settings"
+          >
+            <IoSettings
               className="Login__button-settings"
               onClick={ this.handleSettings }
               type="button"
               data-testid="btn-settings"
-            >
-              Settings
-            </button>
-          </div>
-        </div>
+              size="35"
+            />
+          </motion.div>
+        </motion.div>
       </div>
     );
   }

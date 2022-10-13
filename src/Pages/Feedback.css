@@ -1,25 +1,13 @@
-.Login {
+.Feedback {
   align-items: center;
-  background: url('../assets/images/923.jpg');
-  background-position: 20%;
-  background-size: cover;
   display: flex;
   height: 100vh;
   justify-content: center;
-}
-
-.Login__logo {
-  margin-bottom: 2rem;
-  margin-top: 5rem;
-  width: 20rem;
-}
-
-.Login__logo img {
-  height: 100%;
+  overflow: hidden;
   width: 100%;
 }
 
-.Login__container {
+.Feedback__container {
   align-items: center;
   backdrop-filter: blur(5px);
   background-color: rgba(218, 109, 7, 0.375);
@@ -27,50 +15,63 @@
   background-repeat: no-repeat;
   background-size: cover;
   border-radius: 25px;
+  border-right: 1px solid rgba(255, 255, 255, 0.199);
+  border-top: 1px solid rgba(255, 255, 255, 0.199);
   box-shadow: 20px 20px 50px rgba(0, 0, 0, 0.25);
   display: flex;
-  flex-direction: column-reverse;
-  gap: 0.5rem;
+  flex-direction: column;
   height: 38rem;
   justify-content: center;
+  line-height: 0;
   position: absolute;
   transition: 0.7s all ease;
   width: 28rem;
 }
 
-.Login__container:hover {
-  transform: translateY(-7px);
-}
-
-form {
+.Feedback__person {
   align-items: center;
   display: flex;
-  flex: 6;
-  flex-direction: column;
-  gap: 1rem;
+  flex-direction: column-reverse;
+  justify-content: center;
+  line-height: 0;
 }
 
-.Login__form-input {
-  background-color: white;
-  border: none;
-  border-radius: 12px;
-  box-shadow: 1px 8px 15px rgba(0, 0, 0, 0.1);
+p {
+  font-size: 1.5rem;
+}
+
+span {
+  font-size: 2rem;
+}
+
+.Feedback__person-img {
+  width: 7rem;
+}
+
+.Feedback__person img {
+  border-radius: 50%;
+  width: 100%;
+}
+
+.Feedback__person p {
+  font-weight: 700;
+}
+
+.Feedback__btn-ranking {
+  color: #26643b;
   cursor: pointer;
-  font-size: 1rem;
-  font-weight: 400;
-  height: 2.5rem;
-  letter-spacing: 0.5px;
-  padding: 8px 10px;
-  transition: all 0.3s ease 0s;
-  width: 20rem;
+  margin: 20px;
+  transform: none;
 }
 
-.Login__form-input:focus {
-  border: 2px solid #e1306c;
-  outline: 1px solid #e1306c;
+.Feedback__btn-ranking:hover {
+  color: #00c21d;
+  cursor: pointer;
+  transform: none;
+  transition: 0.5s all ease;
 }
 
-.Login__button {
+.Feedback__playAgain-btn {
   background: linear-gradient(90deg, #8095ff, #ff4885);
   border: none;
   border-radius: 45px;
@@ -87,32 +88,24 @@ form {
   width: 160px;
 }
 
-.Login__button:hover {
+.Feedback__playAgain-btn:hover {
   background: linear-gradient(90deg, #90f, #e1306c);
   box-shadow: 1px 15px 20px rgba(255, 255, 255, 0.4);
   color: white;
   transform: translateY(-7px);
 }
 
-.Login__settings {
-  cursor: pointer;
-  position: relative;
-  right: -40%;
-  top: 3%;
-}
-
 @media screen and ( max-width : 600px ) {
 
-  .Login__container {
+  .Feedback__container {
     border-radius: 1px;
-    gap: 4rem;
     height: 100vh;
     margin-bottom: 1px;
     overflow: hidden;
     width: 100vw;
   }
 
-  .Login__container:hover {
+  .Feedback__container:hover {
     transform: none;
   }
 }

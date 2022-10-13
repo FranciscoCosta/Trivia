@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { MD5 } from 'crypto-js';
 import { PropTypes } from 'prop-types';
+import './Header.css';
 
 class Header extends Component {
   render() {
@@ -16,10 +17,17 @@ class Header extends Component {
             <img src={ gravatar } alt="" data-testid="header-profile-picture" />
           </div>
           <div className="Header__name">
-            <p data-testid="header-player-name">{name}</p>
+            <p data-testid="header-player-name">
+              <span>Name: </span>
+              {' '}
+              {name}
+            </p>
           </div>
           <div className="Header__score">
-            <p data-testid="header-score">{score}</p>
+            <p data-testid="header-score">
+              <span>Total Score: </span>
+              {score}
+            </p>
           </div>
         </div>
       </div>
