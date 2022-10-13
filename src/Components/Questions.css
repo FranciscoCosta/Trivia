@@ -116,15 +116,16 @@ progress::-webkit-progress-value {
   background-color: #de0d92;
   border: 4px solid white;
   border-radius: 40px;
+  line-height: 1.2rem;
   position: absolute;
   text-align: center;
-  top: -3%;
+  top: -4%;
   width: 40%;
   z-index: 2;
 }
 
 .Questions__category h2 {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 }
 
 .Questions__question {
@@ -137,4 +138,112 @@ progress::-webkit-progress-value {
 .Questions__question h1 {
   font-size: 2rem;
   font-weight: 800;
+}
+
+@media screen and (min-width: 600px) and (max-width: 1200px) {
+  .Header__container {
+    border: none;
+    border-radius: 25px;
+    height: 3rem;
+    margin-top: 1px;
+    width: 100%;
+  }
+
+  .Header__container p {
+    font-size: 0.7rem;
+  }
+
+  .Header__container span {
+    font-size: 0.9rem;
+  }
+
+  .Header__img {
+    height: 2rem;
+    width: 2rem;
+  }
+
+  .Header__container img {
+    height: 100%;
+    width: 100%;
+  }
+
+  .Questions__category {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .Header {
+    border-radius: 1px;
+    height: 100%;
+    padding-top: 1px;
+    width: 100%;
+  }
+
+  .Header__container {
+    border: none;
+    border-radius: 1px;
+    height: 3rem;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .Header__container p {
+    font-size: 0.7rem;
+  }
+
+  .Header__container span {
+    font-size: 0.9rem;
+  }
+
+  .Header__img {
+    height: 2rem;
+    width: 2rem;
+  }
+
+  .Header__container img {
+    height: 100%;
+    width: 100%;
+  }
+
+  .Questions__category {
+    display: none;
+  }
+
+  .Questions {
+    height: 100%;
+    margin: 1px;
+    padding: 1px;
+    width: 100%;
+  }
+
+  .Questions__container {
+    border: none;
+    border-radius: 1px;
+    height: 95vh;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .Questions__container h1 {
+    font-size: 1rem;
+  }
+
+  .Questions__container button {
+    font-size: 0.8rem;
+    height: 3.5rem;
+    width: 90%;
+  }
+
+  .Questions__answer-options {
+    gap: 0.2rem;
+  }
+
+  #change {
+    height: 45px;
+    position: absolute;
+    width: 120px;
+    bottom: -11%;
+    right: 10%;
+  }
 }

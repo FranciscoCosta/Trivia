@@ -125,6 +125,7 @@ class Questions extends Component {
   };
 
   nextQuestion = () => {
+    clearInterval(this.interval);
     this.timerCount();
     console.log('NEXT');
     const { history, settings: { numberQuestions } } = this.props;
@@ -233,6 +234,7 @@ class Questions extends Component {
               data-testid="btn-next"
               className="Questions__btn-next"
               onClick={ this.nextQuestion }
+              id="change"
             >
               NEXT
             </button>
